@@ -1,0 +1,2 @@
+defmodule Guardian do
+end
