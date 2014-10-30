@@ -1,7 +1,7 @@
 Guardian
 ========
 
-> Authentication Middelware for [Plug](https://github.com/elixir-lang/plug)
+> Authentication Middleware for [Plug](https://github.com/elixir-lang/plug)
 
 None of this is implemented yet. Still working out the API details. Most all of
 the ideas will be completely stolen from [Warden](https://github.com/hassox/warden).
