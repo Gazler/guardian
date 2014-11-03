@@ -12,19 +12,26 @@ Add Guardian to your router after `Plug.Session`.
 
 ```elixir
 plug Guardian, strategies: [password: PasswordStrategy],
-               failure_app: MyFailureApp,
-               serialize_into_session: fn(user) -> user.id end,
-               serialize_from_session: fn(id) -> User.get(id) end
+               failure_plug: MyFailurePlug,
+               serializer: PasswordStrategy
 ```
 
-### Sample Password Strategy
+### Sample Password Strategy / Session Serializer
 
 ```elixir
 defmodule PasswordStrategy do
+  use Guardian.SessionSerializer
+
+  @doc """
+  This strategy will be used if this returns true.
+  """
   def valid?(conn, params) do
     params["email"] && params["password"]
   end
 
+  @doc """
+  Authenticate the user.
+  """
   def authenticate!(conn, params) do
     if user = User.authenticate!(email: params["email"], password: params["password"]) do
       success! conn, user
@@ -32,5 +39,15 @@ defmodule PasswordStrategy do
       fail conn, "Invalid email or password."
     end
   end
+
+  @doc """
+  The value to store into the session.
+  """
+  def store(user), do: user.id
+
+  @doc """
+  Find the user via the database.
+  """
+  def fetch(id), do: Repo.one(User, id)
 end
 ```
