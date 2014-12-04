@@ -4,6 +4,13 @@ defmodule Guardian.SessionSerializer do
   defmacro __using__(_opts) do
     quote location: :keep do
       @behaviour unquote(__MODULE__)
+
+      def success!(conn, user) do
+        Guardian.put_user(conn, user)
+      end
+
+      def fail(conn, message), do: conn
+
     end
   end
 

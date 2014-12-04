@@ -44,7 +44,13 @@ defmodule Guardian do
       conn = put_private(conn, :guardian_default_strategy, opts[:default_strategy])
     end
 
-    conn
+    strategy = opts[:strategy] || get_default_strategy(conn)
+
+    if strategy.valid?(conn, conn.params) do
+       strategy.authenticate!(conn, conn.params)
+    else
+      conn
+    end
   end
 
   def authenticate!(conn, user, opts \\ []) do
